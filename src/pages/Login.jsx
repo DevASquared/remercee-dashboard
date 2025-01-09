@@ -1,7 +1,8 @@
 import "./../tailwind.css";
-import {useState} from 'react';
-import {getAuth, signInWithEmailAndPassword} from 'firebase/auth';
-import {app} from '../fb/firebase.js';
+import { useState } from 'react';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { app } from '../fb/firebase.js';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
 	const [email, setEmail] = useState('');
@@ -9,21 +10,22 @@ const LoginPage = () => {
 	const [error, setError] = useState('');
 
 	const auth = getAuth(app);
+	const navigate = useNavigate();  // Utilisation de useNavigate pour la redirection
 
-	const handleLogin = async(e) => {
+	const handleLogin = async (e) => {
 		e.preventDefault();
 		setError('');
 
 		try {
 			await signInWithEmailAndPassword(auth, email, password);
-			alert('Connexion réussie !');
-		} catch(err) {
+			navigate('/dashboard');
+		} catch (err) {
 			setError(err.message);
 		}
 	};
 
-	return (<div
-			className="flex justify-center items-center h-screen bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600">
+	return (
+		<div className="flex justify-center items-center h-screen bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600">
 			<div className="bg-white p-8 rounded-lg shadow-xl w-full sm:w-96">
 				<h1 className="text-3xl font-extrabold text-center text-gray-800 mb-6">Login</h1>
 				{error && <div className="text-red-500 text-sm mb-4 text-center">{error}</div>}
@@ -62,7 +64,8 @@ const LoginPage = () => {
 					Don't have an account? <a href="/signup" className="text-blue-500 hover:underline">Sign Up</a>
 				</p>
 			</div>
-		</div>);
+		</div>
+	);
 };
 
 export default LoginPage;
